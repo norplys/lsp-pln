@@ -33,7 +33,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            allowDangerousEmailAccountLinking: true,
         }),
         Credentials({
             authorize: async (credentials) => {
@@ -67,11 +68,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     callbacks: {
       async signIn({ account, user }) {
+        const userEmail = user.email
         
-        if (!user || !user.id) return false
-  
-        if (account && account.provider) {
-          await userRepository.updateEmailVerifiedUser(user.id)
+        if(!userEmail) return false
+
+        const isGoogle = account?.provider === 'google'
+
+        const userExists = await userRepository.getUserByEmail(userEmail)
+        
+        const needBackFill = isGoogle && !userExists
+
+        if (needBackFill) {
+        let kwhNumber = Math.floor(Math.random() * 1000000000).toString()
+        let checkKwhNumber = await userRepository.getUserByKwhNumber(kwhNumber)
+
+        while(checkKwhNumber){
+          kwhNumber = Math.floor(Math.random() * 1000000000).toString()
+          checkKwhNumber = await userRepository.getUserByKwhNumber(kwhNumber)
+        }
+
+        const userWithKwh = { ...user, kwhNumber } as User & { kwhNumber: string }
+
+          await userRepository.createUserWithKwhNumber(userWithKwh)
         }
   
         return true

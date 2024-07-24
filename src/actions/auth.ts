@@ -20,12 +20,40 @@ export async function register(email: string, password: string) {
 
   const hashedPassword = await bcrypt.hashPassword(password);
 
+  let kwhNumber = Math.floor(Math.random() * 1000000000).toString();
+  let checkKwhNumber = await prisma.user.findUnique({
+    where: {
+      kwhNumber,
+    },
+  });
+   while (checkKwhNumber) {
+    kwhNumber = Math.floor(Math.random() * 1000000000).toString();
+    checkKwhNumber = await prisma.user.findUnique({
+      where: {
+        kwhNumber,
+      },
+    });
+  }
+
   await prisma.user.create({
     data: {
       email,
       password: hashedPassword,
+      kwhNumber: kwhNumber,
       emailVerified: new Date(),
+      variant: {
+        connect: {
+          name: "900",
+        }
+      },
+      usage: {
+        create: [{
+          initialKwh: 0,
+          active: true,
+        }]
+      }
     },
+
   });
 
   return {

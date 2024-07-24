@@ -2,7 +2,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- 
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,29 +17,29 @@ enum PaymentStatus {
   PAID
   CANCELED
 }
- 
+
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
-  role          Role            @default(USER)
+  role          Role      @default(USER)
   password      String?
   address       String?
-  kwhNumber     String?         @map("kwh_number")
- 
-  usage         Usage[]
-  bill          Bill[]
-  payment       Payment[]
-  variantId     String?         @map("variant_id")
-  variant       RateVariant?    @relation(fields: [variantId], references: [id])
+  kwhNumber     String?   @unique @map("kwh_number")
+
+  usage     Usage[]
+  bill      Bill[]
+  payment   Payment[]
+  variantId String      @map("variant_id")
+  variant   RateVariant @relation(fields: [variantId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model Account {
   userId            String
   type              String
@@ -52,29 +52,29 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
 
 model RateVariant {
-  id        String  @id @default(uuid())
-  name      String
-  feeRate   Float @map("fee_rate")
+  id      String @id @default(uuid())
+  name    String @unique
+  feeRate Float  @map("fee_rate")
 
-  user     User[]
+  user User[]
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
@@ -82,46 +82,45 @@ model RateVariant {
 
 model Usage {
   id         String  @id @default(uuid())
-  initialKwh Float @map("initial_kwh")
-  finalKwh   Float @map("final_kwh")
+  initialKwh Float   @map("initial_kwh")
+  finalKwh   Float?  @map("final_kwh")
   active     Boolean
 
-  bill       Bill[]
-  userId    String?  @map("user_id")
-  user      User?    @relation(fields: [userId], references: [id])
+  bill   Bill[]
+  userId String? @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 }
 
 model Bill {
-  id        String  @id @default(uuid())
-  status    PaymentStatus
-  totalKwh  Float @map("total_kwh")
+  id       String @id @default(uuid())
+  totalKwh Float  @map("total_kwh")
 
-  payment   Payment[]
-  usageId   String  @map("usage_id")
-  usage     Usage   @relation(fields: [usageId], references: [id])
-  userId    String  @map("user_id")
-  user      User    @relation(fields: [userId], references: [id])
+  payment Payment[]
+  usageId String    @map("usage_id")
+  usage   Usage     @relation(fields: [usageId], references: [id])
+  userId  String    @map("user_id")
+  user    User      @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 }
 
 model Payment {
-  id        String  @id @default(uuid())
-  total     Float
-  adminFee  Float @map("admin_fee")
+  id       String @id @default(uuid())
+  total    Float
+  adminFee Float  @map("admin_fee")
 
-  status    PaymentStatus
+  status PaymentStatus
 
-  userId    String  @map("user_id")
-  user      User    @relation(fields: [userId], references: [id])
-  billId    String  @map("bill_id")
-  bill      Bill    @relation(fields: [billId], references: [id])
-  
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  billId    String   @map("bill_id")
+  bill      Bill     @relation(fields: [billId], references: [id])
+  expiredAt DateTime @map("expired_at")
+
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 }
- 
