@@ -8,13 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { RateVariant, User } from "@prisma/client";
-import { CreateBillDialog } from "./create-bill-modal";
+import { RateVariant, Usage, User } from "@prisma/client";
+import { CreateBill } from "./create-bill-modal";
 import { UpdateUserForm } from "./update-user-modal";
 
-export type userWithVariant = User & { variant: RateVariant };
+export type UserWithVariantAndUsage = User & { variant: RateVariant } & { usage: Usage[] };
 
-export function UserTable({ users, variants }: { users: userWithVariant[] | [], variants: RateVariant[] }) {
+export function UserTable({ users, variants }: { users: UserWithVariantAndUsage[] | [], variants: RateVariant[] }) {
   return (
     <Table className="border border-white">
       <TableHeader className="bg-slate-900">
@@ -34,7 +34,7 @@ export function UserTable({ users, variants }: { users: userWithVariant[] | [], 
             <TableCell>{user?.kwhNumber}</TableCell>
             <TableCell>{user?.variant?.name} VA</TableCell>
             <TableCell className="flex gap-2">
-              <CreateBillDialog />
+              <CreateBill user={user} variants={variants} />
               <UpdateUserForm user={user} variants = {variants} />
             </TableCell>
           </TableRow>

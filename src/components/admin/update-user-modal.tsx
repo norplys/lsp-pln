@@ -28,7 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
-import { userWithVariant } from "./user-table";
+import { UserWithVariantAndUsage } from "./user-table";
 import { RateVariant } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { updateUser } from "@/actions/user";
@@ -53,7 +53,7 @@ export function UpdateUserForm({
   user,
   variants,
 }: {
-  user: userWithVariant;
+  user: UserWithVariantAndUsage;
   variants: RateVariant[];
 }) {
   const { refresh } = useRouter();

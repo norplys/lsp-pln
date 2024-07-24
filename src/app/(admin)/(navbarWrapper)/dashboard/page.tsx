@@ -1,13 +1,13 @@
 import { UserTable } from "@/components/admin/user-table"
 import getAllUsers from "@/actions/admin"
-import type { userWithVariant } from "@/components/admin/user-table"
+import type { UserWithVariantAndUsage } from "@/components/admin/user-table"
 import {getAllVariant} from "@/actions/variant";
 
 export default async function Page({searchParams} : {
   searchParams?: { [key: string]: string | undefined };
 }) {
   const { filter } = searchParams ?? { filter: null }
-  const users = await getAllUsers(filter || null) as userWithVariant[]
+  const users = await getAllUsers(filter || null) as UserWithVariantAndUsage[]
   const variants = await getAllVariant();
   
   return (

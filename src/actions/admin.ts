@@ -7,7 +7,12 @@ export default async function getAllUsers(variant: string | null){
     if(!variant){
         users = await prisma.user.findMany({
             include: {
-                variant: true
+                variant: true,
+                usage: {
+                    where: {
+                        active: true
+                    }
+                },
             }
         })
 
