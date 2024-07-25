@@ -60,15 +60,9 @@ export function AdminPaymentTable({
           <TableRow key={payment.id} className="text-white">
             <TableCell>{index + 1}</TableCell>
             <TableCell>
-              {payment?.status === "PAID" ? (
-                <div className="bg-green-500 w-fit rounded-lg p-2">SETTLED</div>
-              ) : payment?.status === "PENDING" ? (
                 <div className="bg-yellow-500 w-fit rounded-lg p-2">
                   PENDING
                 </div>
-              ) : (
-                <div className="bg-red-500 w-fit rounded-lg p-2">UNPAID</div>
-              )}
             </TableCell>
             <TableCell>{payment.user.email}</TableCell>
             <TableCell>Rp. {payment.bill.totalPrice}</TableCell>

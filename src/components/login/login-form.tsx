@@ -75,7 +75,6 @@ export default function LoginForm() {
   const handleOauth = async () => {
     
     try {
-
       await signIn("google", {
         callbackUrl: "/",
       });

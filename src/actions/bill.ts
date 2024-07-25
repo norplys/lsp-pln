@@ -89,13 +89,17 @@ export async function getAllUserBill(email: string | null){
         where: {
             user: {
               email
-            }
+            },
         },
         include: {
-          payment: true,
+          payment: {
+            orderBy: {
+              createdAt: 'desc'
+            }
+          },
           user: true
         }
-    })
+    });
 
     return bills
 }

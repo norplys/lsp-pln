@@ -56,13 +56,13 @@ export default function AdminNavbar() {
           <AiFillThunderbolt className="h-6 w-6 text-accent" />  
           </div>
           <Link
-            href="#"
+            href="/dashboard"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Dashboard
           </Link>
           <Link
-            href="#"
+            href="/admin/payment"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Payment
