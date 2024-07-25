@@ -15,7 +15,6 @@ enum Role {
 enum PaymentStatus {
   PENDING
   PAID
-  CANCELED
 }
 
 model User {
@@ -95,8 +94,9 @@ model Usage {
 }
 
 model Bill {
-  id       String @id @default(uuid())
-  totalKwh Float  @map("total_kwh")
+  id         String @id @default(uuid())
+  totalKwh   Float  @map("total_kwh")
+  totalPrice Float
 
   payment Payment[]
   usageId String    @map("usage_id")
@@ -110,10 +110,8 @@ model Bill {
 
 model Payment {
   id       String @id @default(uuid())
-  total    Float
-  adminFee Float  @map("admin_fee")
 
-  status PaymentStatus
+  status   PaymentStatus
 
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])

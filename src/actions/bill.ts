@@ -7,6 +7,7 @@ export default async function createBill(
   usageId: string,
   finalKwh: number,
   totalKwh: number,
+  totalPrice: number
 ) {
   if (!finalKwh || !userId || !totalKwh) {
     throw new Error("Please provide all fields");
@@ -43,6 +44,7 @@ export default async function createBill(
     prisma.bill.create({
       data: {
         totalKwh,
+        totalPrice,
         user: {
           connect: {
             id: userId,
@@ -69,4 +71,29 @@ export default async function createBill(
   ]);
 
   return true;
+}
+
+export async function getAllUserBill(email: string | null){
+
+  if(!email){
+    throw new Error("Email Required");
+  }
+
+    const user = await userRepository.getUserByEmail(email);
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const bills = await prisma.bill.findMany({
+        where: {
+            user: {
+              email
+            }
+        },
+        include: {
+          payment: true
+        }
+    })
+
+    return bills
 }

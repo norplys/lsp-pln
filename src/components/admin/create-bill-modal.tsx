@@ -36,8 +36,8 @@ export function CreateBill({
 }) {
   const { refresh } = useRouter();
   const FormSchema = z.object({
-    finalKwh: z.string().transform((v) => Number(v) || 0).refine((v) => v > user.usage[0].initialKwh, {
-      message: `Final Kwh must be greater than ${user.usage[0].initialKwh}.`,
+    finalKwh: z.string().transform((v) => Number(v) || 0).refine((v) => v > user?.usage[0]?.initialKwh, {
+      message: `Final Kwh must be greater than ${user?.usage[0]?.initialKwh || 0}.`,
     }),
   });
 
@@ -47,8 +47,9 @@ export function CreateBill({
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try{
-    const totalKwh = (data.finalKwh - user.usage[0].initialKwh) * user.variant.feeRate;
-    await createBill(user.id, user.usage[0].id, data.finalKwh, totalKwh);
+    const totalKwh = data?.finalKwh - user?.usage[0]?.initialKwh;
+    const totalPrice = totalKwh * user?.variant?.feeRate
+    await createBill(user.id, user?.usage[0].id, data?.finalKwh, totalKwh, totalPrice);
     toast({
       title: "Bill Created",
       description: "Bill Created Succesfully.",
@@ -81,8 +82,8 @@ export function CreateBill({
           <DialogTitle>Create Bill</DialogTitle>
           <DialogDescription>
             Create bill for {user.email}<br />
-            Month : {user.usage[0].createdAt.getMonth()}/{user.usage[0].createdAt.getFullYear()}<br />
-            Initial KWH : {user.usage[0].initialKwh}
+            Month : {user?.usage[0]?.createdAt?.getMonth()}/{user.usage[0]?.createdAt?.getFullYear()}<br />
+            Initial KWH : {user?.usage[0]?.initialKwh}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

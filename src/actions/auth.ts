@@ -26,7 +26,7 @@ export async function register(email: string, password: string) {
       kwhNumber,
     },
   });
-   while (checkKwhNumber) {
+  while (checkKwhNumber) {
     kwhNumber = Math.floor(Math.random() * 1000000000).toString();
     checkKwhNumber = await prisma.user.findUnique({
       where: {
@@ -44,16 +44,17 @@ export async function register(email: string, password: string) {
       variant: {
         connect: {
           name: "900",
-        }
+        },
       },
       usage: {
-        create: [{
-          initialKwh: 0,
-          active: true,
-        }]
-      }
+        create: [
+          {
+            initialKwh: 0,
+            active: true,
+          },
+        ],
+      },
     },
-
   });
 
   return {
@@ -107,7 +108,6 @@ export async function login(email: string, password: string) {
       message: "User logged in successfully.",
     };
   } catch (error) {
-
     return {
       status: 500,
       message: "Internal server error.",

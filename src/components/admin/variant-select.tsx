@@ -9,9 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { userWithVariant } from "./user-table"
+import { UserWithVariantAndUsage } from "./user-table"
 
-export function VariantSelect({variants, user} : {variants : RateVariant[], user: userWithVariant}) {
+export function VariantSelect({variants, user} : {variants: RateVariant[], user: UserWithVariantAndUsage}) {
   return (
     <Select>
       <SelectTrigger className="w-[180px] text-white">

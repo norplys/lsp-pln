@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FcGoogle } from "react-icons/fc";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { login } from "@/actions/auth";
 import Link from "next/link";
 import { useToast } from "../ui/use-toast";
@@ -58,6 +58,7 @@ export default function LoginForm() {
         duration: 5000,
       });
 
+      await getSession();
       push("/");
 
     } catch (error) {

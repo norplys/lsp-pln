@@ -14,14 +14,14 @@ export default function AdminNavbarLayout({
     const { push } = useRouter();
     useEffect(() => {
       if (
-        // session?.data?.user?.role === "ADMIN" || 
+        session?.data?.user?.role !== "ADMIN" || 
         session.status === "unauthenticated") {
         push("/login");
       }
     }, [session]);
 
 
-    if (session.status === "loading" || session.status === "unauthenticated") {
+    if (session.status === "loading" || session.status === "unauthenticated" || session?.data?.user?.role !== "ADMIN") {
       return <Protector />;
     }
 
