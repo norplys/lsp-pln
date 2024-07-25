@@ -23,7 +23,7 @@ export default function UserNavbar() {
           <AiFillThunderbolt className="h-6 w-6 text-accent" />  
           </div>
           <Link
-            href="#"
+            href="/"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Dashboard
@@ -35,7 +35,7 @@ export default function UserNavbar() {
             Billing
           </Link>
           <Link
-            href="#"
+            href="/payment"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Payment

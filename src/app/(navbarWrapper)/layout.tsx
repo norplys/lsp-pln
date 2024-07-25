@@ -11,15 +11,13 @@ export default function NavbarWrapper({
     children: React.ReactNode;
   }>) {
     const {data, status} = useSession()
-    console.log(data)
     const { push } = useRouter();
-    // useEffect(() => {
-    //   if (
-    //     status === "unauthenticated" && data ) {
-    //     push("/login");
-    //   }
-    // }, [status]);
-
+    useEffect(() => {
+      if (
+        status === "unauthenticated") {
+        push("/login");
+      }
+    }, [status]);
 
     if (status === "loading" || status === "unauthenticated") {
       return <Protector />;

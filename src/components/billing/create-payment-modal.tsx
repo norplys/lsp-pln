@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,14 +7,43 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { BillAndPayment } from "./bill-table"
-import { createPayment } from "@/actions/payment"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { BillAndPayment } from "./bill-table";
+import { createPayment } from "@/actions/payment";
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
-export function PaymentModal({bill} : {bill: BillAndPayment}) {
-  console.log(bill)
+
+export function PaymentModal({ bill }: { bill: BillAndPayment }) {
+  const { toast } = useToast();
+  const { refresh } = useRouter();
+
+  async function createPaymentHandler(userId: string, billId: string) {
+    try{
+    await createPayment(userId, billId);
+    toast({
+      title: "Payment Created",
+      description: "Payment Created Succesfully.",
+      duration: 5000,
+      className: "bg-green-500",
+    });
+    refresh();
+    }
+    catch(e){
+      if(e instanceof Error){
+        toast({
+          title: "Error",
+          description: e.message,
+          duration: 5000,
+          className: "bg-red-500",
+        });
+      }
+    }
+  }
+
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -24,9 +53,9 @@ export function PaymentModal({bill} : {bill: BillAndPayment}) {
         <DialogHeader>
           <DialogTitle>Create Payment</DialogTitle>
           <DialogDescription>
-            Please transfer the payment to the following account <br/>
-            Bank: BCA <br/>
-            Account Number: 1234567890 <br/>
+            Please transfer the payment to the following account <br />
+            Bank: BCA <br />
+            Account Number: 1234567890 <br />
             Amount: Rp. {bill.totalPrice}
           </DialogDescription>
         </DialogHeader>
@@ -44,9 +73,14 @@ export function PaymentModal({bill} : {bill: BillAndPayment}) {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={() => createPayment(bill.userId, bill.id)}>Pay</Button> 
+          <Button
+            type="submit"
+            onClick={() => createPaymentHandler(bill.userId, bill.id)}
+          >
+            Pay
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

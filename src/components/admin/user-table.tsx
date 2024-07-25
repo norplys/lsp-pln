@@ -16,7 +16,7 @@ export type UserWithVariantAndUsage = User & { variant: RateVariant } & { usage:
 
 export function UserTable({ users, variants }: { users: UserWithVariantAndUsage[] | [], variants: RateVariant[] }) {
   return (
-    <Table className="border border-white">
+    <Table className="rounded-xl overflow-hidden shadow-sm shadow-white">
       <TableHeader className="bg-slate-900">
         <TableRow>
           <TableHead className="w-[100px]">No</TableHead>
@@ -26,7 +26,7 @@ export function UserTable({ users, variants }: { users: UserWithVariantAndUsage[
           <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody className="bg-slate-950">
         {users?.map((user, i) => (
           <TableRow key={user?.kwhNumber} className="bg-slate-800">
             <TableCell className="font-medium">{i + 1}</TableCell>

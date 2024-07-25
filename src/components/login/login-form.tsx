@@ -18,7 +18,6 @@ import { getSession, signIn } from "next-auth/react";
 import { login } from "@/actions/auth";
 import Link from "next/link";
 import { useToast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -31,7 +30,6 @@ const formSchema = z.object({
 
 export default function LoginForm() {
   const { toast } = useToast();
-  const { push } = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,7 +57,7 @@ export default function LoginForm() {
       });
 
       await getSession();
-      push("/");
+      window.location.href = '/'
 
     } catch (error) {
       console.error(error);

@@ -15,6 +15,7 @@ enum Role {
 enum PaymentStatus {
   PENDING
   PAID
+  CANCELLED
 }
 
 model User {
@@ -86,8 +87,8 @@ model Usage {
   active     Boolean
 
   bill   Bill[]
-  userId String? @map("user_id")
-  user   User?   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
