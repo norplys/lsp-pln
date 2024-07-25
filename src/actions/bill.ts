@@ -93,8 +93,8 @@ export async function getAllUserBill(email: string | null){
         },
         include: {
           payment: {
-            orderBy: {
-              createdAt: 'desc'
+            where: {
+              status: "PENDING"
             }
           },
           user: true
