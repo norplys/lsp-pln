@@ -18,3 +18,17 @@ export async function updateUser(payload : Partial<any>, id: string){
 
     await userRepository.updateUser({email, name}, rateVariant, id)
 }
+
+export async function deleteUser(email: string){
+    if(!email){
+        throw new Error("Please provide email")
+    }
+
+    const user = await userRepository.getUserByEmail(email)
+
+    if(!user){
+        throw new Error("User not found")
+    }
+
+    await userRepository.deleteUser(email)
+}

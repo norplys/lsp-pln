@@ -74,3 +74,11 @@ export function updateUser(payload: any, rateVariantId: string, id: string) {
     },
   });
 }
+
+export function deleteUser(email: string) {
+  return prisma.user.delete({
+    where: {
+      email,
+    },
+  });
+}

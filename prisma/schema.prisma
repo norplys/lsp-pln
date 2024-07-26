@@ -88,7 +88,7 @@ model Usage {
 
   bill   Bill[]
   userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
@@ -103,7 +103,7 @@ model Bill {
   usageId String    @map("usage_id")
   usage   Usage     @relation(fields: [usageId], references: [id])
   userId  String    @map("user_id")
-  user    User      @relation(fields: [userId], references: [id])
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
@@ -117,7 +117,7 @@ model Payment {
   accountName   String        @map("account_name")
 
   userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   billId    String   @map("bill_id")
   bill      Bill     @relation(fields: [billId], references: [id])
   expiredAt DateTime @map("expired_at")
