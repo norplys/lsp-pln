@@ -3,8 +3,8 @@
 import { prisma } from "../../prisma/client/db";
 import { PaymentStatus } from "@prisma/client";
 
-export async function createPayment(userId: string, billId: string){
-    if(!userId || !billId){
+export async function createPayment(userId: string, billId: string, accountNumber: string, accountName: string){
+    if(!userId || !billId || !accountNumber || !accountName){
        throw new Error("Please provide all fields")
     }
 
@@ -29,6 +29,8 @@ export async function createPayment(userId: string, billId: string){
             status: 'PENDING',
             userId,
             billId,
+            accountNumber,
+            accountName,
             expiredAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2)
         }
     })
@@ -56,6 +58,9 @@ export async function getAllUserPaymentsByEmail(email: string | null){
         },
         include: {
             bill: true
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
 

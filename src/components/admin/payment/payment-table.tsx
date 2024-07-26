@@ -48,6 +48,8 @@ export function AdminPaymentTable({
           <TableHead className="w-[100px]">No</TableHead>
           <TableHead>Payment Status</TableHead>
           <TableHead>Email</TableHead>
+          <TableHead>Account Number</TableHead>
+          <TableHead>Account Name</TableHead>
           <TableHead>Total Payment</TableHead>
           <TableHead>Month</TableHead>
           <TableHead>Year</TableHead>
@@ -65,6 +67,8 @@ export function AdminPaymentTable({
                 </div>
             </TableCell>
             <TableCell>{payment.user.email}</TableCell>
+            <TableCell>{payment.accountName}</TableCell>
+            <TableCell>{payment.accountNumber}</TableCell>
             <TableCell>Rp. {payment.bill.totalPrice}</TableCell>
             <TableCell>
               {payment.bill.createdAt
@@ -87,7 +91,7 @@ export function AdminPaymentTable({
             </TableCell>
             <TableCell className="flex gap-2">
               <Button className="bg-green-500" onClick={() => handleValidatePayment(payment.id, 'PAID')}>Validate</Button>
-              <Button className="bg-red-500" onClick={() => handleValidatePayment(payment.id, 'CANCELLED')}>Deny</Button>
+              <Button className="bg-red-500" onClick={() => handleValidatePayment(payment.id, 'CANCELLED')}>Reject</Button>
             </TableCell>
           </TableRow>
         ))}

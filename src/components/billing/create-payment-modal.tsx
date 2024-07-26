@@ -8,6 +8,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BillAndPayment } from "./bill-table";
@@ -20,9 +31,24 @@ export function PaymentModal({ bill }: { bill: BillAndPayment }) {
   const { toast } = useToast();
   const { refresh } = useRouter();
 
-  async function createPaymentHandler(userId: string, billId: string) {
+  const FormSchema = z.object({
+    accountName: z.string().min(3, {
+      message: "Account Name must be at least 3 characters.",
+    }),
+    accountNumber: z.string().min(10, {
+      message: "Account Number must be at least 10 characters.",
+    }),
+  });
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+  });
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     try{
-    await createPayment(userId, billId);
+    const userId = bill.userId;
+    const billId = bill.id;
+    await createPayment(userId, billId, data.accountName, data.accountNumber);
     toast({
       title: "Payment Created",
       description: "Payment Created Succesfully.",
@@ -57,29 +83,55 @@ export function PaymentModal({ bill }: { bill: BillAndPayment }) {
             Bank: BCA <br />
             Account Number: 1234567890 <br />
             Amount: Rp. {bill.totalPrice}
+            <br />
+            <br />
+            Please fill your bank account details below
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Bank Account
-            </Label>
-            <Input
-              id="username"
-              placeholder="012345678"
-              className="col-span-3 text-black"
-              type="telephone"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button
-            type="submit"
-            onClick={() => createPaymentHandler(bill.userId, bill.id)}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-2/3 space-y-6"
           >
-            Pay
-          </Button>
-        </DialogFooter>
+            <FormField
+              control={form.control}
+              name="accountName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank Accont Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      className="text-black"
+                      placeholder="my account"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="accountNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank Account Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="telephone"
+                      className="text-black"
+                      placeholder="012345678910"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="bg-green-600">Pay</Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

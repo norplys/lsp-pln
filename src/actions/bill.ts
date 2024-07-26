@@ -93,11 +93,14 @@ export async function getAllUserBill(email: string | null){
         },
         include: {
           payment: {
-            where: {
-              status: "PENDING"
+            orderBy: {
+              createdAt: 'desc'
             }
           },
           user: true
+        },
+        orderBy: {
+          createdAt: 'desc'
         }
     });
 

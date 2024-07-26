@@ -20,6 +20,8 @@ export function PaymentTable({payments} : {payments: paymentWithBill[]} ) {
         <TableRow>
           <TableHead className="w-[100px]">No</TableHead>
           <TableHead>Payment Status</TableHead>
+          <TableHead>Account Number</TableHead>
+          <TableHead>Account Name</TableHead>
           <TableHead>Total Payment</TableHead>
           <TableHead>Month</TableHead>
           <TableHead>Year</TableHead>
@@ -33,9 +35,11 @@ export function PaymentTable({payments} : {payments: paymentWithBill[]} ) {
             <TableCell>{
               payment?.status === 'PAID' ? <div className="bg-green-500 w-fit rounded-lg p-2">SETTLED</div> : 
               payment?.status === 'PENDING' ? <div className="bg-yellow-500 w-fit rounded-lg p-2">PENDING</div> :
-              payment?.status === 'CANCELLED' ? <div className="bg-red-500 w-fit rounded-lg p-2">CANCELLED</div> :
+              payment?.status === 'CANCELLED' ? <div className="bg-red-500 w-fit rounded-lg p-2">REJECTED</div> :
               <div className="bg-red-500 w-fit rounded-lg p-2">UNPAID</div>
           }</TableCell>
+          <TableCell>{payment.accountName}</TableCell>
+          <TableCell>{payment.accountNumber}</TableCell>
           <TableCell>Rp. {payment.bill.totalPrice}</TableCell>
             <TableCell>{payment.bill.createdAt.toISOString().split("T")[0].toString().split("-")[1].toString()}</TableCell>
             <TableCell>{payment.bill.createdAt.toISOString().split("T")[0].toString().split("-")[0].toString()}</TableCell>

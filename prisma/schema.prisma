@@ -110,9 +110,11 @@ model Bill {
 }
 
 model Payment {
-  id       String @id @default(uuid())
+  id String @id @default(uuid())
 
-  status   PaymentStatus
+  status        PaymentStatus
+  accountNumber String        @map("account_number")
+  accountName   String        @map("account_name")
 
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
