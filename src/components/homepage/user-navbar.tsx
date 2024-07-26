@@ -28,7 +28,7 @@ export default function UserNavbar() {
           >
             Dashboard
           </Link>
-          <Link
+          {user ? <><Link
             href="/billing"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
@@ -39,7 +39,7 @@ export default function UserNavbar() {
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Payment
-          </Link>
+          </Link></> : ''}
         </nav>
         <MobileNavbar />
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
