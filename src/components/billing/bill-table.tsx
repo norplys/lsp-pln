@@ -62,8 +62,7 @@ export function BillTable({ bills }: { bills: BillAndPayment[] }) {
             </TableCell>
             <TableCell>
               {!bill?.payment[0]?.status ||
-              bill.payment[0]?.status === "CANCELLED" ||
-              bill.payment[0].expiredAt < new Date() ? (
+              bill.payment[0]?.status === "CANCELLED" ? (
                 <PaymentModal bill={bill} />
               ) : null}
             </TableCell>

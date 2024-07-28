@@ -14,9 +14,6 @@ export async function createPayment(userId: string, billId: string, accountNumbe
                 id: billId
             },
             status: 'PENDING',
-            expiredAt: {
-                gte: new Date()
-            }
         }
     })
 
@@ -31,7 +28,6 @@ export async function createPayment(userId: string, billId: string, accountNumbe
             billId,
             accountNumber,
             accountName,
-            expiredAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2)
         }
     })
 
