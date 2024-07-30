@@ -19,39 +19,23 @@ export default function MobileNavbar (){
         </SheetTrigger>
         <SheetContent side="left" className='bg-black text-white'>
           <nav className="grid gap-6 text-lg font-medium">
-            <div
-
-              className="flex items-center gap-2 text-lg font-semibold"
-            >
-              <AiFillThunderbolt className='w-6 h-6'/>
-            </div>
-            <Link
-              href="/dashboard"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Orders
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Products
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Customers
-            </Link>
-            <Link href="#" className="hover:text-foreground">
-              Settings
-            </Link>
+          <div
+            className="flex items-center gap-2 font-semibold"
+          >
+          <AiFillThunderbolt className="h-6 w-6 text-accent" />  
+          </div>
+          <Link
+            href="/dashboard"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="/admin/payment"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Payment
+          </Link>
           </nav>
         </SheetContent>
       </Sheet>

@@ -3,8 +3,9 @@ import { AiFillThunderbolt } from "react-icons/ai";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import type { Role, User } from '@prisma/client';
 
-export default function MobileNavbar (){
+export default function MobileNavbar ({user}: {user : Pick<User, 'name' | 'email' | 'image' | 'role'> | undefined}) {
     return (
         <Sheet>
         <SheetTrigger asChild>
@@ -19,39 +20,38 @@ export default function MobileNavbar (){
         </SheetTrigger>
         <SheetContent side="left" className='bg-black text-white'>
           <nav className="grid gap-6 text-lg font-medium">
-            <div
-
-              className="flex items-center gap-2 text-lg font-semibold"
-            >
-              <AiFillThunderbolt className='w-6 h-6'/>
-            </div>
+          <div className="flex items-center gap-2 font-semibold">
+          <AiFillThunderbolt className="h-6 w-6 text-accent" />
+        </div>
+        <Link
+          href="/"
+          className="text-muted-foreground transition-colors hover:text-foreground"
+        >
+          Dashboard
+        </Link>
+        {user ? (
+          <>
             <Link
-              href="/dashboard"
-              className="text-muted-foreground hover:text-foreground"
+              href="/billing"
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
-              Dashboard
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Orders
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Products
+              Billing
             </Link>
             <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
+              href="/payment"
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
-              Customers
+              Payment
             </Link>
-            <Link href="#" className="hover:text-foreground">
-              Settings
-            </Link>
+          </>
+        ) : (
+          <Link
+            href="/login"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Login
+          </Link>
+        )}
           </nav>
         </SheetContent>
       </Sheet>
