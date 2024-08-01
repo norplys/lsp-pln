@@ -1,24 +1,21 @@
-"use client";
-
-import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 import Protector from "@/components/protector";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { redirect, useRouter } from "next/navigation";
 
-export default function AdminNavbarLayout({
+export default async function AdminNavbarLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = useSession();
-  const { push } = useRouter();
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      push("/");
-    }
-  }, [session]);
+  const session = await auth();
 
-  if (session.status === "loading" || session.status === "authenticated") {
+  if(
+    session 
+  ){
+    redirect('/')
+  }
+
+  if (session) {
     return <Protector />;
   }
 

@@ -2,7 +2,7 @@
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
 
 -- CreateEnum
-CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'PAID', 'CANCELED');
+CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'PAID', 'CANCELLED');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -15,7 +15,7 @@ CREATE TABLE "User" (
     "password" TEXT,
     "address" TEXT,
     "kwh_number" TEXT,
-    "variant_id" TEXT,
+    "variant_id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -65,9 +65,9 @@ CREATE TABLE "RateVariant" (
 CREATE TABLE "Usage" (
     "id" TEXT NOT NULL,
     "initial_kwh" DOUBLE PRECISION NOT NULL,
-    "final_kwh" DOUBLE PRECISION NOT NULL,
+    "final_kwh" DOUBLE PRECISION,
     "active" BOOLEAN NOT NULL,
-    "user_id" TEXT,
+    "user_id" TEXT NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
 
@@ -77,8 +77,8 @@ CREATE TABLE "Usage" (
 -- CreateTable
 CREATE TABLE "Bill" (
     "id" TEXT NOT NULL,
-    "status" "PaymentStatus" NOT NULL,
     "total_kwh" DOUBLE PRECISION NOT NULL,
+    "totalPrice" DOUBLE PRECISION NOT NULL,
     "usage_id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -90,9 +90,9 @@ CREATE TABLE "Bill" (
 -- CreateTable
 CREATE TABLE "Payment" (
     "id" TEXT NOT NULL,
-    "total" DOUBLE PRECISION NOT NULL,
-    "admin_fee" DOUBLE PRECISION NOT NULL,
     "status" "PaymentStatus" NOT NULL,
+    "account_number" TEXT NOT NULL,
+    "account_name" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "bill_id" TEXT NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -104,23 +104,29 @@ CREATE TABLE "Payment" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "User_kwh_number_key" ON "User"("kwh_number");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "RateVariant_name_key" ON "RateVariant"("name");
+
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_variant_id_fkey" FOREIGN KEY ("variant_id") REFERENCES "RateVariant"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_variant_id_fkey" FOREIGN KEY ("variant_id") REFERENCES "RateVariant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Usage" ADD CONSTRAINT "Usage_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Usage" ADD CONSTRAINT "Usage_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Bill" ADD CONSTRAINT "Bill_usage_id_fkey" FOREIGN KEY ("usage_id") REFERENCES "Usage"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Bill" ADD CONSTRAINT "Bill_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Bill" ADD CONSTRAINT "Bill_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Payment" ADD CONSTRAINT "Payment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Payment" ADD CONSTRAINT "Payment_bill_id_fkey" FOREIGN KEY ("bill_id") REFERENCES "Bill"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

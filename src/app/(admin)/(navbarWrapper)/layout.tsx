@@ -1,29 +1,18 @@
-"use client"
 import AdminNavbar from "@/components/admin/admin-navbar";
-import { useSession } from "next-auth/react";
-import Protector from "@/components/protector";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function AdminNavbarLayout({
+export default async function AdminNavbarLayout({
     children,
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-    const session = useSession();
-    const { push } = useRouter();
-    useEffect(() => {
+    const session = await auth();
       if (
-        session?.data?.user?.role !== "ADMIN" || 
-        session.status === "unauthenticated") {
-        push("/login");
+        session?.user?.role !== "ADMIN" 
+  ) {
+        redirect('/login')
       }
-    }, [session]);
-
-
-    if (session.status === "loading" || session.status === "unauthenticated" || session?.data?.user?.role !== "ADMIN") {
-      return <Protector />;
-    }
 
     return (
       <section className="text-white flex min-h-screen w-full flex-col">

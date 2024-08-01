@@ -25,7 +25,9 @@ async function main() {
     ],
   });
 
-  const variantId = (await prisma.rateVariant.findFirst({ where: { name: "900" } })).id;
+  const variantId = (
+    await prisma.rateVariant.findFirst({ where: { name: "900" } })
+  ).id;
 
   await prisma.user.createMany({
     data: [
@@ -33,44 +35,61 @@ async function main() {
         name: "John Doe",
         email: "admin123@gmail.com",
         password: await bcrypt.hash("admin123", 10),
-        kwhNumber: '123456789',
+        kwhNumber: "123456789",
         role: "ADMIN",
-        variantId
+        variantId,
       },
       {
         name: "Jane Doe",
         email: "jane@gmail.com",
         password: await bcrypt.hash("jane123", 10),
-        kwhNumber: '987654321',
+        kwhNumber: "987654321",
         role: "USER",
-        variantId
+        variantId,
       },
       {
         name: "Alice Doe",
         email: "alice@gmail.com",
         password: await bcrypt.hash("alice123", 10),
-        kwhNumber: '123123123',
+        kwhNumber: "123123123",
         role: "USER",
-        variantId
+        variantId,
       },
       {
         name: "Bob Doe",
         email: "bob@gmail.com",
         password: await bcrypt.hash("bob123", 10),
-        kwhNumber: '456456456',
+        kwhNumber: "456456456",
         role: "USER",
-        variantId
+        variantId,
       },
       {
         name: "Charlie Doe",
         email: "charlie@gmail.com",
         password: await bcrypt.hash("charlie123", 10),
-        kwhNumber: '789789789',
+        kwhNumber: "789789789",
         role: "USER",
-        variantId
-      }
+        variantId,
+      },
     ],
   });
+
+  const  getAllUserId = await prisma.user.findMany({
+    select: {
+      id: true,
+    },
+  });
+
+  getAllUserId.forEach(async (user) => {
+    await prisma.usage.create({
+      data: {
+        userId: user.id,
+        initialKwh: 0,
+        finalKwh: 0,
+        active: true,
+      },
+    });
+    })
 }
 
 main()
